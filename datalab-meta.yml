@@ -3,8 +3,10 @@ title: Lab sample Hello world
 abstract: This lab is a simple lab
 alternateName: Hello Lab
 contactPoint:
-  email: olivier.daumas@acri-st.fr
+  email: nikolai.maltsev@acri-st.fr
   id: 123456
   organisation-name: acri-st
   role: Developer
 language: english
+description: no description yet
+version: 1.0.0
