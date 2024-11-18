@@ -4,7 +4,7 @@ abstract: This lab is a simple lab
 alternateName: Hello Lab
 contactPoint:
   email: nikolai.maltsev@acri-st.fr
-  id: 123456
+  id: "123456"
   organisation-name: acri-st
   role: Developer
 language: english
