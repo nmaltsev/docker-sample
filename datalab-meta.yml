@@ -5,8 +5,12 @@ alternateName: Hello Lab
 contactPoint:
   email: nikolai.maltsev@acri-st.fr
   id: "123456"
-  organisation-name: acri-st
+  organisationName: acri-st
   role: Developer
 language: english
 description: no description yet
 version: 1.0.0
+creator:
+  name: ACRI-ST
+  logo: https://raw.githubusercontent.com/nmaltsev/fm/refs/heads/main/src/favicon.svg
+thumbnailUrl: https://raw.githubusercontent.com/nmaltsev/fm/refs/heads/main/src/favicon.svg
