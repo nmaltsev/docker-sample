@@ -1,6 +1,8 @@
-from aiohttp import web, ClientSession
 import os
 import logging
+from aiohttp import web, ClientSession
+from typing import List, Optional, Awaitable
+from routes.cache_proxy import cache_handler
 
 log = logging.getLogger(__name__)
 
@@ -72,7 +74,10 @@ async def test3_handler(request):
     response.content_type = "text/html"
     return response
 
-async def proxy(request, url:str):
+async def get_proxy_request_stream(request:web.Request, url:str) -> Awaitable[web.StreamResponse|None]:
+    """
+    This function requests a resource and proxies its response
+    """
     async with ClientSession(auto_decompress=False) as session:
         async with await session.request(request.method, url) as proxy_request:
             if proxy_request.status not in {201, 202, 200}:
@@ -94,17 +99,25 @@ async def proxy(request, url:str):
             await proxy_response.write_eof()
             return proxy_response
 
-async def proxy_handler(request):
+async def proxy_handler(request: web.Request):
     host = request.match_info.get("host")
     path = request.match_info.get("path")
     log.debug("Host %s, Path %s", host, path)
     print(f"{host=}, {path=}")
-    response = await proxy(request, "https://" + host + "/" + path)
+    response = await get_proxy_request_stream(request, "https://" + host + "/" + path)
     if response is not None:
         return response
     return web.FileResponse(
         headers={"Cache-Control": "max-age=6000, immutable"},
         path=(os.path.dirname(__file__) or ".") + "/image.svg",
+    )
+
+import json
+async def health_handler(request: web.Request):
+    # TODO return env variables
+    return web.Response(
+        status=200,
+        body=json.dumps({"params": 1}),
     )
     
 
@@ -114,7 +127,10 @@ app.add_routes([
     web.get("/page1", test1_handler),
     web.get("/page2", test2_handler),
     web.get("/page3", test3_handler),
-    web.get("/proxy/{host:[^\\/]+}/{path:.*}", proxy_handler)
+    web.get("/health", health_handler),
+    # DEPRECATED
+    web.get("/proxy/{host:[^\\/]+}/{path:.*}", proxy_handler),
+    web.get("/cache/{protocol:[^\\/]+}/{url:.*}", cache_handler),
 ])
 
 
