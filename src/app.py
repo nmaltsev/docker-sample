@@ -4,6 +4,12 @@ from aiohttp import web, ClientSession
 from typing import List, Optional, Awaitable
 from routes.cache_proxy import cache_handler
 
+logging.basicConfig(
+    stream=sys.stdout,  # This directs log output to stdout
+    level=logging.DEBUG,  # Set the minimum log level (DEBUG, INFO, WARNING, etc.)
+    format='%(asctime)s - %(levelname)s - %(message)s'  # Custom log format
+)
+
 log = logging.getLogger(__name__)
 
 
